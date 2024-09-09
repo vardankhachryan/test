@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                cleanWs()
+                echo 'Hello World'
+                sh '''ls -l
+                    mkdir build
+                    touch build/home.txt
+                    echo kitchen >> build/home.txt
+                    cat build/home.txt '''
+            }
+        }
+        stage('test') {
+            steps {
+                sh '''cat build/home.txt
+                grep kitchen build/home.txt'''
+            }
+        }
+    }
+}
