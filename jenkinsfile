@@ -1,22 +1,31 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Hello') {
+        stage('Build') {
             steps {
-                cleanWs()
-                echo 'Hello World'
-                sh '''ls -l
-                    mkdir build
-                    touch build/home.txt
-                    echo kitchen >> build/home.txt
-                    cat build/home.txt '''
+                echo 'Building...'
+                // Add your build steps here
             }
         }
-        stage('test') {
+        
+        stage('Test') {
             steps {
-                sh '''cat build/home.txt
-                grep kitchen build/home.txt'''
+                script {
+                    if (fileExists('build/index.html')) {
+                        echo 'build/index.html exists.'
+                        sh 'npm test'
+                    } else {
+                        error 'build/index.html does not exist!'
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Add your deploy steps here
             }
         }
     }
